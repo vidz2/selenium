@@ -226,10 +226,10 @@ function sendRequest(options, onOk, onError, opt_data, opt_proxy) {
   });
 
   request.on('error', function(e) {
-    if (e.code === 'ECONNRESET') {
+    if (e.code === 'ECONNRESET' || e.code === 'EADDRINUSE') {
       setTimeout(function() {
         sendRequest(options, onOk, onError, opt_data, opt_proxy);
-      }, 15);
+      }, e.code === 'EADDRINUSE' ? 50 : 15);
     } else {
       var message = e.message;
       if (e.code) {
